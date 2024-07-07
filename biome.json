@@ -1,0 +1,36 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
+  "files": {
+    "ignore": ["./dist/*", "./src-tauri/target/*"]
+  },
+  "organizeImports": {
+    "enabled": true,
+    "ignore": []
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "useKeyWithClickEvents": "off",
+        "useKeyWithMouseEvents": "off",
+        "useButtonType": "off"
+      }
+    },
+    "ignore": []
+  },
+  "formatter": {
+    "enabled": true,
+    "ignore": [],
+    "indentStyle": "space",
+    "lineWidth": 120,
+    "indentWidth": 2
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
+  }
+}
