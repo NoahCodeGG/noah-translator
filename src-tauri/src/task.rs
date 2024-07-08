@@ -14,7 +14,7 @@ pub fn start_ocr_translate_task(window: &Window, profile_id: &String) {
         serde_json::from_str(&std::fs::read_to_string(&config_cache_path).unwrap()).unwrap();
     let profile_translations_cache_dir_path = get_profile_translations_cache_dir_path(profile_id);
     let app_handle = APP.get().unwrap();
-    
+
     let ocr_translate_handle = tauri::async_runtime::spawn(async move {
         let translate_area_str = config["translate_area"].to_string();
         let translate_area: serde_json::Value = serde_json::from_str(&translate_area_str).unwrap();
@@ -52,11 +52,13 @@ pub fn start_ocr_translate_task(window: &Window, profile_id: &String) {
             tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
         }
     });
-    
+
     let ocr_translate_result_emit_handle_window = window.clone();
     let ocr_translate_result_emit_handle = tauri::async_runtime::spawn(async move {
         while let Some(result) = ocr_translate_receiver.recv().await {
-            ocr_translate_result_emit_handle_window.emit("realtime_translation", Some(result)).unwrap();
+            ocr_translate_result_emit_handle_window
+                .emit("realtime_translation", Some(result))
+                .unwrap();
         }
     });
 

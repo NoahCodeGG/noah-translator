@@ -16,7 +16,7 @@ pub fn screenshot(monitor_id: u32, save_path: &str) {
 
 pub fn screenshot_async(monitor_id: u32, save_path: &str) {
     let path = PathBuf::from(save_path);
-    
+
     tauri::async_runtime::spawn(async move {
         screenshot(monitor_id, path.to_str().unwrap());
     });

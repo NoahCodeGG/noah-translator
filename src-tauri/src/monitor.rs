@@ -53,5 +53,8 @@ pub fn get_current_monitor_xcap_id_by_tauri_monitor(tauri_monitor: &tauri::Monit
         }
     }
 
-    panic!("No monitor found with tauri monitor position: {:?}", tauri_monitor.position());
+    panic!(
+        "No monitor found with tauri monitor position: {:?}",
+        tauri_monitor.position()
+    );
 }

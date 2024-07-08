@@ -9,6 +9,7 @@ use tauri::Manager;
 use tauri_plugin_log::LogTarget;
 mod cmd;
 mod config;
+mod monitor;
 mod path;
 mod profile;
 mod shortcut;
@@ -16,7 +17,6 @@ mod system_ocr;
 mod task;
 mod translate;
 mod window;
-mod monitor;
 
 pub static APP: OnceCell<tauri::AppHandle> = OnceCell::new();
 fn main() {
