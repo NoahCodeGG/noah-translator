@@ -1,6 +1,8 @@
 import { BrowserRouter } from 'react-router-dom'
 
-import './App.css'
+import '@/App.css'
+import { ThemeProvider } from '@/components/theme-provider'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import Config from '@/windows/Config'
 import Screenshot from '@/windows/Screenshot'
 import Translate from '@/windows/Translate'
@@ -13,7 +15,13 @@ const windowMap: Record<string, JSX.Element> = {
 }
 
 function App() {
-  return <BrowserRouter>{windowMap[appWindow.label]}</BrowserRouter>
+  return (
+    <ThemeProvider>
+      <TooltipProvider>
+        <BrowserRouter>{windowMap[appWindow.label]}</BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
+  )
 }
 
 export default App
