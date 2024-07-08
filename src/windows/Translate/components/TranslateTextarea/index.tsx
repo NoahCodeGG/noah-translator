@@ -18,7 +18,7 @@ export default function TranslateTextarea() {
 
   return (
     <div className='w-fit h-full select-none overflow-y-scroll overflow-x-hidden px-3' data-tauri-drag-region>
-      网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐网易云音乐{text}
+      {text}
     </div>
   )
 }
