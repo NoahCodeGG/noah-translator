@@ -1,27 +1,27 @@
-import {emit} from '@tauri-apps/api/event'
-import {appWindow} from '@tauri-apps/api/window'
+import { emit } from '@tauri-apps/api/event'
+import { appWindow } from '@tauri-apps/api/window'
 import type React from 'react'
-import {useEffect, useState} from 'react'
-import {info, warn} from 'tauri-plugin-log-api'
+import { useEffect, useState } from 'react'
+import { info, warn } from 'tauri-plugin-log-api'
 
 export default function Screenshot() {
   const [isSelecting, setIsSelecting] = useState(false)
-  const [startPoint, setStartPoint] = useState({x: 0, y: 0});
-  const [movePoint, setMovePoint] = useState({x: 0, y: 0});
-  const [hasSelection, setHasSelection] = useState(false);
+  const [startPoint, setStartPoint] = useState({ x: 0, y: 0 })
+  const [movePoint, setMovePoint] = useState({ x: 0, y: 0 })
+  const [hasSelection, setHasSelection] = useState(false)
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.buttons === 1) {
       setHasSelection(false)
       setIsSelecting(true)
-      setStartPoint({x: e.clientX, y: e.clientY})
-      setMovePoint({x: e.clientX, y: e.clientY})
+      setStartPoint({ x: e.clientX, y: e.clientY })
+      setMovePoint({ x: e.clientX, y: e.clientY })
     }
   }
 
   const handleMouseMove = (e: MouseEvent) => {
     if (isSelecting) {
-      setMovePoint({x: e.clientX, y: e.clientY})
+      setMovePoint({ x: e.clientX, y: e.clientY })
     }
   }
 
@@ -30,8 +30,8 @@ export default function Screenshot() {
     setHasSelection(true)
 
     // TODO 测试
-    const width = Math.abs(startPoint.x - e.clientX);
-    const height = Math.abs(startPoint.y - e.clientY);
+    const width = Math.abs(startPoint.x - e.clientX)
+    const height = Math.abs(startPoint.y - e.clientY)
     await info(`width: ${width}, height: ${height}`)
     if (width > 0 && height > 0) {
       await emit('translate_area', {
@@ -40,10 +40,10 @@ export default function Screenshot() {
         width: width,
         height: height,
       })
-      await appWindow.close();
+      await appWindow.close()
     } else {
       await warn('Screenshot area is too small')
-      await appWindow.close();
+      await appWindow.close()
     }
   }
 
@@ -57,6 +57,7 @@ export default function Screenshot() {
   }
 
   // 防止 mouseup 事件丢失
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     // 设置 body, root 背景色为透明
     document.body.style.backgroundColor = 'transparent'

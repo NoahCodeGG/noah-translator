@@ -1,22 +1,25 @@
-use crate::path::{
-    get_cut_image_cache_path, get_profile_cache_dir_path, get_profile_translations_cache_dir_path,
-    get_screenshot_cache_path,
-};
-use log::{error, info};
+use log::error;
 use std::path::PathBuf;
+use xcap::image;
 use xcap::image::GenericImage;
-use xcap::{image, Monitor};
 
-pub fn screenshot(monitor_name: &str, save_path: &str) {
-    info!("Screenshot monitor: {}", monitor_name);
-    let monitors = Monitor::all().unwrap();
+pub fn screenshot(monitor_id: u32, save_path: &str) {
+    let monitors = xcap::Monitor::all().unwrap();
 
     for monitor in monitors {
-        if monitor.name() == monitor_name {
+        if monitor.id() == monitor_id {
             let image = monitor.capture_image().unwrap();
             image.save(save_path).unwrap();
         }
     }
+}
+
+pub fn screenshot_async(monitor_id: u32, save_path: &str) {
+    let path = PathBuf::from(save_path);
+
+    tauri::async_runtime::spawn(async move {
+        screenshot(monitor_id, path.to_str().unwrap());
+    });
 }
 
 pub fn cut_image(image_path: &str, save_path: &str, x: u32, y: u32, width: u32, height: u32) {

@@ -9,13 +9,14 @@ use tauri::Manager;
 use tauri_plugin_log::LogTarget;
 mod cmd;
 mod config;
+mod monitor;
 mod path;
-mod shortcut;
-mod window;
 mod profile;
+mod shortcut;
 mod system_ocr;
 mod task;
 mod translate;
+mod window;
 
 pub static APP: OnceCell<tauri::AppHandle> = OnceCell::new();
 fn main() {
@@ -27,6 +28,12 @@ fn main() {
                 .build(),
         )
         .setup(|app| {
+            #[cfg(target_os = "macos")]
+            {
+                // hide taskbar icon on macOS
+                app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+            }
+
             // Global AppHandle
             APP.set(app.app_handle().clone()).unwrap();
 

@@ -7,7 +7,7 @@ pub fn create_profile_cache_config(
     y: i32,
     width: u32,
     height: u32,
-    monitor_name: &String,
+    monitor_id: u32,
 ) {
     let profile_cache_dir_path = get_profile_cache_dir_path(profile_id);
     let profile_cache_config_path = profile_cache_dir_path.join("config.json");
@@ -17,7 +17,7 @@ pub fn create_profile_cache_config(
             "y": y,
             "width": width,
             "height": height,
-            "monitor_name": monitor_name
+            "monitor_id": monitor_id
         }
     });
     std::fs::write(

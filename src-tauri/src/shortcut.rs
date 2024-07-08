@@ -1,8 +1,8 @@
-use log::{info, warn};
-use tauri::{AppHandle, GlobalShortcutManager};
-use crate::APP;
 use crate::config::{get, set};
 use crate::window::quick_creation;
+use crate::APP;
+use log::{info, warn};
+use tauri::{AppHandle, GlobalShortcutManager};
 
 fn register<F>(app_handle: &AppHandle, name: &str, handler: F, key: &str) -> Result<(), String>
 where

@@ -8,7 +8,7 @@ pub fn system_ocr(app_handle: &AppHandle, image_path: &str, lang: &str) -> Resul
     use windows::Graphics::Imaging::BitmapDecoder;
     use windows::Media::Ocr::OcrEngine;
     use windows::Storage::{FileAccessMode, StorageFile};
-    
+
     let path = image_path.replace("\\\\?\\", "");
 
     let file = StorageFile::GetFileFromPathAsync(&HSTRING::from(path))
@@ -59,7 +59,11 @@ pub fn system_ocr(app_handle: &AppHandle, image_path: &str, lang: &str) -> Resul
 #[cfg(target_os = "macos")]
 pub fn system_ocr(app_handle: &AppHandle, image_path: &str, lang: &str) -> Result<String, String> {
     let arch = std::env::consts::ARCH;
-    let ocr_bin_path = app_handle.path_resolver().resource_dir().unwrap().join(format!("resources/ocr-{arch}-apple-darwin"));
+    let ocr_bin_path = app_handle
+        .path_resolver()
+        .resource_dir()
+        .unwrap()
+        .join(format!("resources/ocr-{arch}-apple-darwin"));
     info!("ocr_bin_path: {:?}", ocr_bin_path);
     match std::process::Command::new("chmod")
         .arg("+x")
