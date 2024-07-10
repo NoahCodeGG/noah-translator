@@ -25,6 +25,14 @@
       "globalShortcut": {
         "all": true
       },
+      "notification": {
+        "all": true
+      },
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": ["http://**", "https://**"]
+      },
       "os": {
         "all": true
       },
