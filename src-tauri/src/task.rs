@@ -1,19 +1,30 @@
 use crate::cmd::{cut_image, screenshot};
-use crate::path::{get_profile_cache_file_path, get_profile_translations_cache_dir_path};
+use crate::path::get_profile_translations_cache_dir_path;
+use crate::profile::{get_profile_cache_config, update_profile_cache_config};
 use crate::system_ocr::system_ocr;
 use crate::translate::translate;
 use crate::APP;
 use log::info;
-use tauri::Window;
+use tauri::{Window, WindowEvent};
 use tokio::sync::mpsc;
 
-pub fn start_ocr_translate_task(window: &Window, profile_id: &String) {
+pub fn start_ocr_translate_task(window: &Window, profile_id: String) {
     let (ocr_translate_sender, mut ocr_translate_receiver) = mpsc::channel::<String>(1);
-    let config_cache_path = get_profile_cache_file_path(profile_id, "config.json");
-    let config: serde_json::Value =
-        serde_json::from_str(&std::fs::read_to_string(&config_cache_path).unwrap()).unwrap();
-    let profile_translations_cache_dir_path = get_profile_translations_cache_dir_path(profile_id);
+    let config_str = get_profile_cache_config(profile_id.clone());
+    let config: serde_json::Value = serde_json::from_str(&config_str).unwrap();
+    let profile_translations_cache_dir_path =
+        get_profile_translations_cache_dir_path(profile_id.clone());
     let app_handle = APP.get().unwrap();
+
+    window.on_window_event(move |event| {
+        if let WindowEvent::Moved(position) = event {
+            let config_str = get_profile_cache_config(profile_id.clone());
+            let mut config: serde_json::Value = serde_json::from_str(&config_str).unwrap();
+            config["translate_area"]["x"] = position.x.into();
+            config["translate_area"]["y"] = position.y.into();
+            update_profile_cache_config(profile_id.clone(), config.to_string());
+        }
+    });
 
     let ocr_translate_handle = tauri::async_runtime::spawn(async move {
         let translate_area_str = config["translate_area"].to_string();

@@ -25,6 +25,9 @@
       "globalShortcut": {
         "all": true
       },
+      "notification": {
+        "all": true
+      },
       "os": {
         "all": true
       },

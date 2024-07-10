@@ -7,7 +7,7 @@ import TranslateTextarea from './components/TranslateTextarea'
 
 export default function Translate() {
   const [isLock, setIsLock] = useState<boolean>(false)
-  const [isEnter, setIsEnter] = useState<boolean>(false)
+  const [isEnter, setIsEnter] = useState<boolean>(true)
 
   const handlerMouseEnter = () => setIsEnter(true)
   const handlerMouseLeave = () => setIsEnter(false)

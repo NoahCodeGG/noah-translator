@@ -1,12 +1,12 @@
 use crate::cmd::screenshot_async;
 use crate::monitor::get_current_monitor_xcap_id_by_tauri_monitor;
 use crate::path::get_profile_cache_dir_path;
-use crate::profile::create_profile_cache_config;
+use crate::profile::update_profile_cache_config;
 use crate::task::start_ocr_translate_task;
 use crate::APP;
 use log::{info, warn};
 use nanoid::nanoid;
-use serde_json::{from_str, Value};
+use serde_json::{from_str, json, Value};
 use tauri::{LogicalPosition, LogicalSize, Manager, Window, WindowBuilder};
 use window_shadows::set_shadow;
 
@@ -80,7 +80,7 @@ pub fn quick_creation() {
     let monitor = screenshot_window.current_monitor().unwrap().unwrap();
     let monitor_id = get_current_monitor_xcap_id_by_tauri_monitor(&monitor);
     let profile_id = nanoid!();
-    let profile_cache_dir_path = get_profile_cache_dir_path(&profile_id);
+    let profile_cache_dir_path = get_profile_cache_dir_path(profile_id.clone());
     let screenshot_path_buf = profile_cache_dir_path.join("profile.png");
     let screenshot_path = screenshot_path_buf.to_str().unwrap();
     let screenshot_window_ = screenshot_window.clone();
@@ -102,17 +102,19 @@ pub fn quick_creation() {
         let window_position = window_logical_position.to_physical::<i32>(dpi);
 
         // 创建配置文件
-        create_profile_cache_config(
-            &profile_id,
-            window_position.x,
-            window_position.y,
-            window_size.width,
-            window_size.height,
-            monitor_id,
-        );
+        let config = json!({
+            "translate_area": {
+                "x": window_position.x,
+                "y": window_position.y,
+                "width": window_size.width,
+                "height": window_size.height,
+                "monitor_id": monitor_id
+            }
+        });
+        update_profile_cache_config(profile_id.clone(), config.to_string());
 
         let translate_window = translate_window(&monitor, 0, 0, 0, 0);
-        start_ocr_translate_task(&translate_window, &profile_id);
+        start_ocr_translate_task(&translate_window, profile_id.clone());
         screenshot_window_.unlisten(event.id())
     });
 }
@@ -164,14 +166,28 @@ fn translate_window(monitor: &tauri::Monitor, x: i32, y: i32, width: u32, height
             .set_min_size(Some(tauri::LogicalSize::new(100, 100)))
             .unwrap();
         window.set_size(tauri::LogicalSize::new(300, 200)).unwrap();
-        window.center().unwrap();
+
+        #[cfg(target_os = "macos")]
+        {
+            let dpi = monitor.scale_factor();
+            let monitor_position = monitor.position().to_logical::<i32>(dpi);
+            let monitor_size = monitor.size().to_logical::<i32>(dpi);
+            let window_position = LogicalPosition::new(
+                monitor_position.x + (monitor_size.width - 300) / 2,
+                monitor_position.y + (monitor_size.height - 200) / 2,
+            );
+            window.set_position(window_position).unwrap();
+        }
+
+        #[cfg(not(target_os = "macos"))]
+        {
+            window.center().unwrap();
+        }
     }
 
-    window.set_decorations(false).unwrap();
     window.set_maximizable(false).unwrap();
     window.set_minimizable(false).unwrap();
     window.set_always_on_top(true).unwrap();
-    window.center().unwrap();
     window.set_focus().unwrap();
     window.show().unwrap();
 

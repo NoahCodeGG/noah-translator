@@ -29,7 +29,6 @@ export default function Screenshot() {
     setIsSelecting(false)
     setHasSelection(true)
 
-    // TODO 测试
     const width = Math.abs(startPoint.x - e.clientX)
     const height = Math.abs(startPoint.y - e.clientY)
     await info(`width: ${width}, height: ${height}`)
