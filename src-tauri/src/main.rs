@@ -47,7 +47,7 @@ fn main() {
             #[cfg(target_os = "macos")]
             {
                 // hide taskbar icon on macOS
-                // app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+                app.set_activation_policy(tauri::ActivationPolicy::Accessory);
             }
 
             // Global AppHandle
