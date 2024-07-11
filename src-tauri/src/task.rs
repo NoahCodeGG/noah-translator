@@ -38,12 +38,12 @@ pub fn start_ocr_translate_task(window: &Window, profile_id: String) {
 
         loop {
             let now = chrono::Local::now();
-            let screenshot_name = now.format("%Y-%m-%d %H:%M:%S.png").to_string();
+            let screenshot_name = now.format("%Y%m%d_%H%M%S.png").to_string();
             let screenshot_path_buf = profile_translations_cache_dir_path.join(&screenshot_name);
             let screenshot_path = screenshot_path_buf.to_str().unwrap();
             screenshot(monitor_id, &screenshot_path);
 
-            let cut_image_name = now.format("%Y-%m-%d %H:%M:%S_cut.png").to_string();
+            let cut_image_name = now.format("%Y%m%d_%H%M%S_cut.png").to_string();
             let cut_image_path_buf = profile_translations_cache_dir_path.join(&cut_image_name);
             let cut_image_path = cut_image_path_buf.to_str().unwrap();
             cut_image(
@@ -56,8 +56,18 @@ pub fn start_ocr_translate_task(window: &Window, profile_id: String) {
             );
 
             let ocr_text = system_ocr(app_handle, cut_image_path, "auto").unwrap();
+            info!(
+                "{:?} OCR Text: {:?}",
+                now.format("%Y%m%d_%H%M%S").to_string(),
+                ocr_text
+            );
             // TODO config source language
             let result = translate(&ocr_text, "auto", "zh-CN").await.unwrap();
+            info!(
+                "{:?} Translate Result: {:?}",
+                now.format("%Y%m%d_%H%M%S").to_string(),
+                result
+            );
             ocr_translate_sender.send(result).await.unwrap();
             // TODO config interval
             tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
