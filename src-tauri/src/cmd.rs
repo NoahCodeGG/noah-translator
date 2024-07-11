@@ -10,15 +10,15 @@ pub fn screenshot(monitor_id: u32, save_path: &str) {
         if monitor.id() == monitor_id {
             let image = monitor.capture_image().unwrap();
             image.save(save_path).unwrap();
+            break;
         }
     }
 }
 
 pub fn screenshot_async(monitor_id: u32, save_path: &str) {
-    let path = PathBuf::from(save_path);
-
+    let save_path = save_path.to_owned();
     tauri::async_runtime::spawn(async move {
-        screenshot(monitor_id, path.to_str().unwrap());
+        screenshot(monitor_id, &save_path);
     });
 }
 

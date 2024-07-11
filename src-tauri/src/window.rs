@@ -8,7 +8,6 @@ use log::{info, warn};
 use nanoid::nanoid;
 use serde_json::{from_str, json, Value};
 use tauri::{LogicalPosition, LogicalSize, Manager, Window, WindowBuilder};
-use window_shadows::set_shadow;
 
 // Get daemon window instance
 pub fn get_daemon_window() -> Window {
@@ -60,9 +59,12 @@ fn build_window(label: &str, title: &str) -> (Window, bool) {
             }
             let window = builder.build().unwrap();
 
-            if label != "screenshot" {
+            if ["screenshot", "translate"].contains(&label) {
                 #[cfg(not(target_os = "linux"))]
-                set_shadow(&window, true).unwrap_or_default();
+                {
+                    use window_shadows::set_shadow;
+                    set_shadow(&window, true).unwrap_or_default();
+                }
             }
 
             // #[cfg(debug_assertions)]
@@ -80,7 +82,7 @@ pub fn quick_creation() {
     let monitor = screenshot_window.current_monitor().unwrap().unwrap();
     let monitor_id = get_current_monitor_xcap_id_by_tauri_monitor(&monitor);
     let profile_id = nanoid!();
-    let profile_cache_dir_path = get_profile_cache_dir_path(profile_id.clone());
+    let profile_cache_dir_path = get_profile_cache_dir_path(&profile_id);
     let screenshot_path_buf = profile_cache_dir_path.join("profile.png");
     let screenshot_path = screenshot_path_buf.to_str().unwrap();
     let screenshot_window_ = screenshot_window.clone();
@@ -111,10 +113,10 @@ pub fn quick_creation() {
                 "monitor_id": monitor_id
             }
         });
-        update_profile_cache_config(profile_id.clone(), config.to_string());
+        update_profile_cache_config(&profile_id, config.to_string().as_str());
 
         let translate_window = translate_window(&monitor, 0, 0, 0, 0);
-        start_ocr_translate_task(&translate_window, profile_id.clone());
+        start_ocr_translate_task(&translate_window, &profile_id);
         screenshot_window_.unlisten(event.id())
     });
 }
