@@ -1,10 +1,12 @@
 name: Package
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
     tags:
       - '!updater'
       - '*.*.*'
+permissions: write-all
 jobs:
   change-version:
     runs-on: ubuntu-latest
@@ -12,9 +14,9 @@ jobs:
       version: ${{ steps.outputstep.outputs.VERSION }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+            fetch-depth: 0
       - name: Install git
         run: |
           sudo apt-get update
@@ -29,11 +31,11 @@ jobs:
           sed -i "s/version = \"0.0.0\"/version = \"$(git describe --tags | sed 's/-[0-9]*-.*//g')\"/g" src-tauri/Cargo.toml
           echo $(git describe --tags | sed 's/-[0-9]*-.*//g')
       - name: Upload Artifacts for Windows
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: source
-          path: ./*
-          if-no-files-found: error
+            name: source
+            path: ./*
+            if-no-files-found: error
 
   build-for-macos:
     needs: change-version
@@ -44,22 +46,22 @@ jobs:
         target: [aarch64-apple-darwin, x86_64-apple-darwin]
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: source
       - name: Setup Nodejs
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 19
+          node-version: 21
       - name: Install Rust Stable
         uses: dtolnay/rust-toolchain@stable
       - name: install dependencies
         run: |
           rustup target add ${{ matrix.target }}
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
       - name: Install Dependencies
         run: pnpm install
       - name: Code Format
@@ -69,6 +71,8 @@ jobs:
           export TAURI_PRIVATE_KEY="${{ secrets.TAURI_PRIVATE_KEY }}"
           export TAURI_KEY_PASSWORD="${{ secrets.TAURI_KEY_PASSWORD }}"
           pnpm tauri build --target ${{ matrix.target }}
+          sudo chmod +x src-tauri/resources/*
+          chmod +x src-tauri/resources/*
       - name: Change File Name
         if: matrix.target == 'aarch64-apple-darwin'
         run: |
@@ -80,13 +84,13 @@ jobs:
           sudo mv src-tauri/target/x86_64-apple-darwin/release/bundle/macos/noah-translator.app.tar.gz src-tauri/target/x86_64-apple-darwin/release/bundle/macos/noah-translator_${{needs.change-version.outputs.version}}_x64.app.tar.gz
           sudo mv src-tauri/target/x86_64-apple-darwin/release/bundle/macos/noah-translator.app.tar.gz.sig src-tauri/target/x86_64-apple-darwin/release/bundle/macos/noah-translator_${{needs.change-version.outputs.version}}_x64.app.tar.gz.sig
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos_${{ matrix.target }}_dmg
           path: src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
           if-no-files-found: error
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos_${{ matrix.target }}_updater
           path: src-tauri/target/${{ matrix.target }}/release/bundle/macos/*.app*
@@ -124,13 +128,13 @@ jobs:
             toolchain: stable-aarch64-pc-windows-msvc
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: source
       - name: Setup Nodejs
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 19
+          node-version: 21
       - name: Install Rust Stable
         uses: dtolnay/rust-toolchain@stable
       - name: install dependencies
@@ -138,9 +142,9 @@ jobs:
           rustup target add ${{ matrix.target }}
           rustup toolchain install --force-non-host ${{ matrix.toolchain }}
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
       - name: Install Dependencies
         run: pnpm install
       - name: Code Format
@@ -170,7 +174,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags')
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Install git
@@ -182,9 +186,9 @@ jobs:
           echo "VERSION=$(git describe --tags | sed 's/-[0-9]*-.*//g')" >> $GITHUB_ENV
           echo "VERSION=$(git describe --tags | sed 's/-[0-9]*-.*//g')"
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
       - name: pnpm install
         run: pnpm install
       - name: Release updater file
