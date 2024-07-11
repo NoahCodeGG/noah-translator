@@ -30,6 +30,9 @@ pub fn get_profile_cache_dir_path(profile_id: String) -> PathBuf {
 pub fn get_profile_cache_file_path(profile_id: String, file_name: String) -> PathBuf {
     let profile_cache_dir_path = get_profile_cache_dir_path(profile_id);
     let profile_cache_file_path = profile_cache_dir_path.join(file_name);
+    if !profile_cache_file_path.exists() {
+        std::fs::File::create(&profile_cache_file_path).expect("Create Profile Cache File Failed");
+    }
     profile_cache_file_path
 }
 

@@ -8,7 +8,6 @@ use log::{info, warn};
 use nanoid::nanoid;
 use serde_json::{from_str, json, Value};
 use tauri::{LogicalPosition, LogicalSize, Manager, Window, WindowBuilder};
-use window_shadows::set_shadow;
 
 // Get daemon window instance
 pub fn get_daemon_window() -> Window {
@@ -62,7 +61,10 @@ fn build_window(label: &str, title: &str) -> (Window, bool) {
 
             if label != "screenshot" {
                 #[cfg(not(target_os = "linux"))]
-                set_shadow(&window, true).unwrap_or_default();
+                {
+                    use window_shadows::set_shadow;
+                    set_shadow(&window, true).unwrap_or_default();
+                }
             }
 
             // #[cfg(debug_assertions)]
