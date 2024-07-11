@@ -5,9 +5,7 @@
       "iconAsTemplate": true
     },
     "bundle": {
-      "resources": [
-        "resources/*"
-      ]
+      "resources": ["resources/*"]
     }
   }
 }

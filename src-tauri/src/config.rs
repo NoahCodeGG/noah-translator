@@ -1,15 +1,17 @@
-use std::sync::Mutex;
+use crate::APP;
 use log::{info, warn};
 use serde_json::{json, Value};
+use std::sync::Mutex;
 use tauri::api::path::app_config_dir;
 use tauri::{Manager, Wry};
 use tauri_plugin_store::{Store, StoreBuilder};
-use crate::APP;
 
 pub struct StoreWrapper(pub Mutex<Store<Wry>>);
 
 pub fn init_config(app: &mut tauri::App) {
-    let config_path = app_config_dir(app.config().as_ref()).unwrap().join("config.json");
+    let config_path = app_config_dir(app.config().as_ref())
+        .unwrap()
+        .join("config.json");
     info!("Load config from: {:?}", config_path);
     let mut store = StoreBuilder::new(app.handle(), config_path).build();
 

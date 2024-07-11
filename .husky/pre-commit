@@ -1,1 +1,5 @@
-pnpm exec lint-staged
+#!/usr/bin/env sh
+pnpm exec lint-staged &&
+cd src-tauri &&
+cargo fmt &&
+cd ..
