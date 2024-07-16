@@ -78,6 +78,17 @@ fn build_window(label: &str, title: &str) -> (Window, bool) {
 }
 
 pub fn quick_creation() {
+    // close old translate window
+    let app_handle = APP.get().unwrap();
+    match app_handle.get_window("translate") {
+        Some(window) => {
+            info!("Window existence: {}", "translate");
+            window.trigger("close", Some("".to_string()));
+            window.close().unwrap();
+        }
+        None => {}
+    }
+
     let screenshot_window = screenshot_window();
     let monitor = screenshot_window.current_monitor().unwrap().unwrap();
     let monitor_id = get_current_monitor_xcap_id_by_tauri_monitor(&monitor);
@@ -117,7 +128,8 @@ pub fn quick_creation() {
 
         let translate_window = translate_window(&monitor, 0, 0, 0, 0);
         start_ocr_translate_task(&translate_window, &profile_id);
-        screenshot_window_.unlisten(event.id())
+        screenshot_window_.unlisten(event.id());
+        screenshot_window_.close().unwrap();
     });
 }
 

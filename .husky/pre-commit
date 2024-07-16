@@ -2,4 +2,5 @@
 pnpm exec lint-staged &&
 cd src-tauri &&
 cargo fmt &&
-cd ..
+cd .. &&
+git add .

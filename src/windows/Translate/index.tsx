@@ -27,7 +27,6 @@ export default function Translate() {
       icon: () => <X size={20} />,
       action: async () => {
         await emit('close')
-        await appWindow.close()
       },
     },
   ]

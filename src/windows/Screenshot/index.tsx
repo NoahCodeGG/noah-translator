@@ -39,7 +39,6 @@ export default function Screenshot() {
         width: width,
         height: height,
       })
-      await appWindow.close()
     } else {
       await warn('Screenshot area is too small')
       await appWindow.close()

@@ -22,6 +22,7 @@ mod tray;
 mod window;
 
 pub static APP: OnceCell<tauri::AppHandle> = OnceCell::new();
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _, cwd| {

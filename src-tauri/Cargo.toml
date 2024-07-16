@@ -14,6 +14,7 @@ tauri-build = { version = "1", features = [] }
 
 [dependencies]
 tauri = { version = "1", features = [
+    "updater",
     "macos-private-api",
     "os-all",
     "shell-all",
@@ -39,7 +40,7 @@ mouse_position = "0.1.4"
 chrono = "0.4.38"
 nanoid = "0.4.0"
 tokio = "1.38.0"
-reqwest = "0.12.5"
+reqwest = { version = "0.12.5", features = ["json"] }
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
@@ -49,7 +50,16 @@ custom-protocol = ["tauri/custom-protocol"]
 window-shadows = "0.2"
 
 [target.'cfg(windows)'.dependencies]
-windows = {version="0.58.0",features= ["Win32_UI_WindowsAndMessaging", "Win32_Foundation", "Graphics_Imaging", "Media_Ocr", "Foundation", "Globalization", "Storage", "Storage_Streams"] }
+windows = { version = "0.58.0", features = [
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_Foundation",
+    "Graphics_Imaging",
+    "Media_Ocr",
+    "Foundation",
+    "Globalization",
+    "Storage",
+    "Storage_Streams",
+] }
 window-shadows = "0.2"
 
 [target.'cfg(target_os = "linux")'.dependencies]
