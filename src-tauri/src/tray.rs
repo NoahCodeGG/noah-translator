@@ -6,6 +6,7 @@ use tauri::SystemTrayMenu;
 use tauri::SystemTrayMenuItem;
 use tauri::{AppHandle, GlobalShortcutManager};
 
+use crate::window::config_window;
 use crate::window::quick_creation;
 
 #[tauri::command]
@@ -18,6 +19,7 @@ pub fn tray_event_handler<'a>(app: &'a AppHandle, event: SystemTrayEvent) {
     match event {
         SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
             "quick_creation" => on_quick_creation_click(),
+            "config" => on_config_click(),
             "view_log" => on_view_log_click(app),
             "restart" => on_restart_click(app),
             "quit" => on_quit_click(app),
@@ -29,6 +31,10 @@ pub fn tray_event_handler<'a>(app: &'a AppHandle, event: SystemTrayEvent) {
 
 fn on_quick_creation_click() {
     quick_creation();
+}
+
+fn on_config_click() {
+    config_window();
 }
 
 fn on_view_log_click(app: &AppHandle) {
@@ -51,12 +57,14 @@ fn on_quit_click(app: &AppHandle) {
 fn tray_menu() -> tauri::SystemTrayMenu {
     let quick_creation = CustomMenuItem::new("quick_creation", "快速创建").accelerator("F2");
     let view_log = CustomMenuItem::new("view_log", "查看日志");
+    let config = CustomMenuItem::new("config", "偏好设置");
     let restart = CustomMenuItem::new("restart", "重启应用");
     let quit = CustomMenuItem::new("quit", "退出");
 
     SystemTrayMenu::new()
         .add_item(quick_creation)
         .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(config)
         .add_item(view_log)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(restart)

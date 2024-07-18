@@ -17,7 +17,7 @@ mod profile;
 mod shortcut;
 mod system_ocr;
 mod task;
-mod translate;
+mod translator;
 mod tray;
 mod window;
 

@@ -1,3 +1,4 @@
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { type Event, listen } from '@tauri-apps/api/event'
 import { useEffect, useState } from 'react'
 
@@ -17,8 +18,9 @@ export default function TranslateTextarea() {
   }, [])
 
   return (
-    <div className='w-fit h-full select-none overflow-y-scroll overflow-x-hidden px-3' data-tauri-drag-region>
+    <ScrollArea className='w-fit h-full overflow-x-hidden px-3' data-tauri-drag-region>
       {text}
-    </div>
+      <ScrollBar orientation='vertical' />
+    </ScrollArea>
   )
 }

@@ -41,6 +41,7 @@ chrono = "0.4.38"
 nanoid = "0.4.0"
 tokio = "1.38.0"
 reqwest = { version = "0.12.5", features = ["json"] }
+async-trait = "0.1.81"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

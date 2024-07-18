@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { cn } from '@/lib/utils'
 import { emit } from '@tauri-apps/api/event'
-import { appWindow } from '@tauri-apps/api/window'
 import { Lock, LockOpen, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import TranslateTextarea from './components/TranslateTextarea'
@@ -42,10 +42,10 @@ export default function Translate() {
 
   return isLock ? (
     <div
-      className={[
+      className={cn(
         'w-fit h-fit rounded-md text-white cursor-default overflow-hidden',
         isEnter ? 'bg-black opacity-70 w-full h-full' : '',
-      ].join(' ')}
+      )}
       onMouseEnter={handlerMouseEnter}
       onMouseLeave={handlerMouseLeave}
     >

@@ -2,7 +2,6 @@ use crate::cmd::{cut_image, screenshot};
 use crate::path::get_profile_cache_dir_path;
 use crate::profile::{get_profile_cache_config, update_profile_cache_config};
 use crate::system_ocr::system_ocr;
-use crate::translate::translate;
 use crate::APP;
 use log::info;
 use tauri::{Window, WindowEvent};
@@ -88,6 +87,7 @@ pub fn start_ocr_translate_task(window: &Window, profile_id: &str) {
     window.listen("close", move |event| {
         ocr_translate_handle.abort();
         ocr_translate_result_emit_handle.abort();
+        window_.close().unwrap();
         window_.unlisten(event.id())
     });
 }

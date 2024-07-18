@@ -2767,6 +2767,7 @@ dependencies = [
 name = "noah-translator"
 version = "0.0.0"
 dependencies = [
+ "async-trait",
  "chrono",
  "log",
  "mouse_position",

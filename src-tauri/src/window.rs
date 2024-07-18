@@ -48,17 +48,20 @@ fn build_window(label: &str, title: &str) -> (Window, bool) {
             .focused(true)
             .title(title)
             .visible(false)
-            .decorations(false)
             .transparent(true);
 
             #[cfg(target_os = "macos")]
             {
                 builder = builder
-                    .title_bar_style(tauri::TitleBarStyle::Transparent)
+                    .title_bar_style(tauri::TitleBarStyle::Overlay)
                     .hidden_title(true);
             }
-            let window = builder.build().unwrap();
 
+            if ["screenshot", "translate"].contains(&label) {
+                builder = builder.decorations(false);
+            }
+
+            let window = builder.build().unwrap();
             if ["screenshot", "translate"].contains(&label) {
                 #[cfg(not(target_os = "linux"))]
                 {
@@ -84,7 +87,6 @@ pub fn quick_creation() {
         Some(window) => {
             info!("Window existence: {}", "translate");
             window.trigger("close", Some("".to_string()));
-            window.close().unwrap();
         }
         None => {}
     }
@@ -144,7 +146,6 @@ fn screenshot_window() -> Window {
         let dpi = monitor.scale_factor();
         let logical_size = monitor_size.to_logical::<f64>(dpi);
         let logical_position = monitor_position.to_logical::<f64>(dpi);
-        window.set_decorations(false).unwrap();
         window.set_size(logical_size).unwrap();
         window.set_position(logical_position).unwrap();
     }
@@ -202,6 +203,20 @@ fn translate_window(monitor: &tauri::Monitor, x: i32, y: i32, width: u32, height
     window.set_maximizable(false).unwrap();
     window.set_minimizable(false).unwrap();
     window.set_always_on_top(true).unwrap();
+    window.set_focus().unwrap();
+    window.show().unwrap();
+
+    window
+}
+
+pub fn config_window() -> Window {
+    let (window, _exists) = build_window("config", "Config");
+
+    window
+        .set_min_size(Some(tauri::LogicalSize::new(800, 400)))
+        .unwrap();
+    window.set_size(tauri::LogicalSize::new(800, 600)).unwrap();
+    window.center().unwrap();
     window.set_focus().unwrap();
     window.show().unwrap();
 
