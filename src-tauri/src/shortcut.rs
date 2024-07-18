@@ -1,4 +1,4 @@
-use crate::config::{get, set};
+use crate::config::{get_config, set_config};
 use crate::window::quick_creation;
 use crate::APP;
 use log::{info, warn};
@@ -10,10 +10,10 @@ where
 {
     let hotkey = {
         if key.is_empty() {
-            match get(name) {
+            match get_config(name) {
                 Some(v) => v.as_str().unwrap().to_string(),
                 None => {
-                    set(name, "");
+                    set_config(name, "");
                     String::new()
                 }
             }

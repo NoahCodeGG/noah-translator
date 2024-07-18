@@ -5,7 +5,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu.tsx'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils/tailwind'
 import configRoutes from '@/windows/Config/routes'
 
 interface Props {

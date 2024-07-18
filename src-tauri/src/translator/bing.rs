@@ -2,10 +2,11 @@ use async_trait::async_trait;
 use log::{error, info};
 use serde_json::{json, Value};
 
-use crate::config::get;
+use crate::config::get_config;
 
 use super::translator::Translator;
 
+#[derive(Clone)]
 pub struct BingTranslator {
     target_lang: String,
 }
@@ -13,7 +14,11 @@ pub struct BingTranslator {
 impl BingTranslator {
     pub fn new() -> Self {
         BingTranslator {
-            target_lang: get("target_lang").unwrap().as_str().unwrap().to_string(),
+            target_lang: get_config("translate_target_language")
+                .unwrap()
+                .as_str()
+                .unwrap()
+                .to_string(),
         }
     }
 }

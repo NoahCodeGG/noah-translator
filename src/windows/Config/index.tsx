@@ -6,7 +6,6 @@ import configRoutes from './routes'
 export default function Config() {
   const page = useRoutes(configRoutes)
   const location = useLocation()
-  console.log('location', location)
 
   return (
     <div className='w-full h-full rounded-md overflow-hidden border-2 border-zinc-200 dark:border-zinc-800'>

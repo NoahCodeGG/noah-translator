@@ -1,19 +1,24 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use crate::cmd::reload_store;
 use crate::config::init_config;
 use crate::shortcut::register_shortcut;
 use log::{error, info};
 use once_cell::sync::OnceCell;
+use plugin::init_plugin;
 use tauri::api::notification::Notification;
 use tauri::Manager;
 use tauri_plugin_log::LogTarget;
 use tray::{tray_event_handler, update_tray};
+
 mod cmd;
 mod config;
 mod monitor;
 mod path;
+mod plugin;
 mod profile;
+mod screenshot;
 mod shortcut;
 mod system_ocr;
 mod task;
@@ -43,6 +48,7 @@ fn main() {
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
             Some(vec![]),
         ))
+        .plugin(tauri_plugin_fs_watch::init())
         .system_tray(tauri::SystemTray::new())
         .setup(|app| {
             #[cfg(target_os = "macos")]
@@ -58,6 +64,10 @@ fn main() {
             info!("Init Config Store");
             init_config(app);
 
+            // Init Plugin
+            info!("Init Plugin");
+            init_plugin(app);
+
             // Update Tray Menu
             update_tray(app.app_handle());
 
@@ -70,7 +80,7 @@ fn main() {
             Ok(())
         })
         .on_system_tray_event(tray_event_handler)
-        .invoke_handler(tauri::generate_handler![])
+        .invoke_handler(tauri::generate_handler![reload_store])
         .build(tauri::generate_context!())
         .expect("error while running tauri application")
         .run(|_app_handle, event| {

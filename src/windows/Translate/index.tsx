@@ -1,5 +1,5 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils/tailwind'
 import { emit } from '@tauri-apps/api/event'
 import { Lock, LockOpen, X } from 'lucide-react'
 import { useEffect, useState } from 'react'

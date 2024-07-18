@@ -1,7 +1,7 @@
-use crate::cmd::screenshot_async;
 use crate::monitor::get_current_monitor_xcap_id_by_tauri_monitor;
 use crate::path::get_profile_cache_dir_path;
 use crate::profile::update_profile_cache_config;
+use crate::screenshot::screenshot_async;
 use crate::task::start_ocr_translate_task;
 use crate::APP;
 use log::{info, warn};

@@ -29,6 +29,7 @@ tauri = { version = "1", features = [
 ] }
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-fs-watch = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 serde = { version = "1", features = ["derive"] }
@@ -42,6 +43,7 @@ nanoid = "0.4.0"
 tokio = "1.38.0"
 reqwest = { version = "0.12.5", features = ["json"] }
 async-trait = "0.1.81"
+dyn-clone = "1.0.17"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

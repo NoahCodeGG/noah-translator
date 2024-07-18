@@ -1,6 +1,8 @@
-use crate::cmd::{cut_image, screenshot};
+use crate::config::get_config;
 use crate::path::get_profile_cache_dir_path;
+use crate::plugin::get_translator;
 use crate::profile::{get_profile_cache_config, update_profile_cache_config};
+use crate::screenshot::{cut_image, screenshot};
 use crate::system_ocr::system_ocr;
 use crate::APP;
 use log::info;
@@ -65,12 +67,14 @@ pub fn start_ocr_translate_task(window: &Window, profile_id: &str) {
 
             let ocr_text = system_ocr(app_handle, cut_image_path.as_str(), "auto").unwrap();
             info!("OCR Text: {:?}", ocr_text);
-            // TODO config source language
-            let result = translate(&ocr_text, "auto", "zh-CN").await.unwrap();
+            let translator = get_translator().unwrap();
+            let result = translator.translate(&ocr_text, "auto").await.unwrap();
             info!("Translate Result: {:?}", result);
             ocr_translate_sender.send(result).await.unwrap();
-            // TODO config interval
-            tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+
+            // OCR Interval
+            let ocr_interval = get_config("ocr_interval").unwrap().as_u64().unwrap();
+            tokio::time::sleep(tokio::time::Duration::from_millis(ocr_interval)).await;
         }
     });
 

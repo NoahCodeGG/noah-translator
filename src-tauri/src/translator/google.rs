@@ -6,6 +6,7 @@ use crate::config;
 
 use super::translator::Translator;
 
+#[derive(Clone)]
 pub struct GoogleTranslator {
     target_lang: String,
 }
@@ -13,7 +14,7 @@ pub struct GoogleTranslator {
 impl GoogleTranslator {
     pub fn new() -> Self {
         GoogleTranslator {
-            target_lang: config::get("target_lang")
+            target_lang: config::get_config("translate_target_language")
                 .unwrap()
                 .as_str()
                 .unwrap()
