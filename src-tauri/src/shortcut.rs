@@ -45,7 +45,7 @@ pub fn register_shortcut(shortcut: &str) -> Result<(), String> {
     let app_handle = APP.get().unwrap();
     match shortcut {
         "all" => {
-            register(app_handle, "quick_creation", quick_creation, "f2")?;
+            register(app_handle, "quick_creation", quick_creation, "f7")?;
         }
         _ => {}
     }
