@@ -45,6 +45,12 @@ export default function Screenshot() {
     }
   }
 
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      await appWindow.close()
+    }
+  }
+
   const getSelectionStyle = () => {
     return {
       top: Math.min(startPoint.y, movePoint.y),
@@ -79,7 +85,7 @@ export default function Screenshot() {
   }, [isSelecting])
 
   return (
-    <>
+    <div onKeyDown={handleKeyDown}>
       <div
         className='fixed top-0 left-0 bottom-0 right-0 cursor-crosshair select-none bg-transparent'
         onMouseDown={handleMouseDown}
@@ -88,6 +94,6 @@ export default function Screenshot() {
         className={`fixed bg-[#2080f020] border border-solid border-sky-500 ${!isSelecting && !hasSelection && 'hidden'}`}
         style={getSelectionStyle()}
       />
-    </>
+    </div>
   )
 }

@@ -12,6 +12,7 @@ export default function Translate() {
   const handlerMouseEnter = () => setIsEnter(true)
   const handlerMouseLeave = () => setIsEnter(false)
   const handlerUnlockClick = () => setIsLock(false)
+
   const operations = [
     {
       key: 'lock',
@@ -61,7 +62,7 @@ export default function Translate() {
           </Tooltip>
         )}
       </div>
-      <TranslateTextarea />
+      <TranslateTextarea isLock={isLock} />
     </div>
   ) : (
     <div
@@ -86,7 +87,7 @@ export default function Translate() {
             </Tooltip>
           ))}
       </div>
-      <TranslateTextarea />
+      <TranslateTextarea isLock={isLock} />
     </div>
   )
 }

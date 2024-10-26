@@ -1,8 +1,10 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { type Event, listen } from '@tauri-apps/api/event'
 import { useEffect, useState } from 'react'
 
-export default function TranslateTextarea() {
+interface Props {
+  isLock: boolean
+}
+export default function TranslateTextarea({ isLock }: Props) {
   const [text, setText] = useState<string>()
 
   useEffect(() => {
@@ -17,10 +19,11 @@ export default function TranslateTextarea() {
     })
   }, [])
 
-  return (
-    <ScrollArea className='w-fit h-full overflow-x-hidden px-3' data-tauri-drag-region>
+  return isLock ? (
+    <div className='w-fit h-full select-none overflow-y-scroll overflow-x-hidden px-3'>{text}</div>
+  ) : (
+    <div className='w-fit h-full select-none overflow-y-scroll overflow-x-hidden px-3' data-tauri-drag-region>
       {text}
-      <ScrollBar orientation='vertical' />
-    </ScrollArea>
+    </div>
   )
 }

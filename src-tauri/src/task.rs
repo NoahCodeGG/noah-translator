@@ -89,9 +89,10 @@ pub fn start_ocr_translate_task(window: &Window, profile_id: &str) {
 
     let window_ = window.clone();
     window.listen("close", move |event| {
+        info!("Close OCR Translate Task");
         ocr_translate_handle.abort();
         ocr_translate_result_emit_handle.abort();
+        window_.unlisten(event.id());
         window_.close().unwrap();
-        window_.unlisten(event.id())
     });
 }

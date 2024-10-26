@@ -55,7 +55,7 @@ fn on_quit_click(app: &AppHandle) {
 }
 
 fn tray_menu() -> tauri::SystemTrayMenu {
-    let quick_creation = CustomMenuItem::new("quick_creation", "快速创建").accelerator("F2");
+    let quick_creation = CustomMenuItem::new("quick_creation", "快速创建").accelerator("f7");
     let view_log = CustomMenuItem::new("view_log", "查看日志");
     let config = CustomMenuItem::new("config", "偏好设置");
     let restart = CustomMenuItem::new("restart", "重启应用");
